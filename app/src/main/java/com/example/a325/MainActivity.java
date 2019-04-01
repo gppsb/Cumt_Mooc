@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.a325.fragments.CommunityFragment;
-import com.example.a325.fragments.CourseFragment;
+import com.example.a325.fragments.AllCourseFragment;
 import com.example.a325.fragments.DownloadFragment;
+import com.example.a325.fragments.HomeFragment;
 import com.example.a325.fragments.MineFragment;
 
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout mtabMine;
 
     private List<Fragment> mFragments;
-    private CourseFragment mCourseFragment;
-    private CommunityFragment mCoummunityFragment;
+    private HomeFragment mHomeFragment;
+    private AllCourseFragment mAllCourseFragment;
     private DownloadFragment mDownloadFragment;
     private MineFragment mMineFragment;
 
@@ -130,13 +130,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initFragments(){
         mFragments = new ArrayList<>();
 
-        mCoummunityFragment = new CommunityFragment();
-        mCourseFragment = new CourseFragment();
+        mAllCourseFragment = new AllCourseFragment();
+        mHomeFragment = new HomeFragment();
         mDownloadFragment = new DownloadFragment();
         mMineFragment = new MineFragment();
 
-        mFragments.add(mCoummunityFragment);
-        mFragments.add(mCourseFragment);
+        mFragments.add(mHomeFragment);
+        mFragments.add(mAllCourseFragment);
         mFragments.add(mDownloadFragment);
         mFragments.add(mMineFragment);
     }

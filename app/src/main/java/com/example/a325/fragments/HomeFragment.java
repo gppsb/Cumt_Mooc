@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.a325.R;
-import com.example.a325.acitvities.ClassifyActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,11 +18,10 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CourseFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
-    @Bind(R.id.iv_classify)
-    ImageView mivClassify;
+
     @Bind(R.id.iv_study_latest)
     ImageView mivStudyLatest;
     @Bind(R.id.iv_search)
@@ -33,7 +31,7 @@ public class CourseFragment extends Fragment implements View.OnClickListener {
     @Bind(R.id.listview)
     ListView mlistview;
 
-    public CourseFragment() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
@@ -42,28 +40,19 @@ public class CourseFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_course, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
-        setupClick();
+
+
         return view;
-
     }
 
-    private void setupClick(){
-        mivClassify.setOnClickListener(this);
-    }
 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.iv_classify:
-                Intent intent1 = new Intent(getActivity(),ClassifyActivity.class);
-                startActivity(intent1);
-                getActivity().overridePendingTransition(R.anim.slide_in_left,R.anim.slide_none);
-                break;
-        }
+
 
     }
 
