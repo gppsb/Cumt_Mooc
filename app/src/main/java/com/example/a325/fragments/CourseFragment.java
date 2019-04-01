@@ -45,7 +45,7 @@ public class CourseFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_course, container, false);
         ButterKnife.bind(this, view);
 
-
+        setupClick();
         return view;
 
     }
