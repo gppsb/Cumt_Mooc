@@ -59,7 +59,7 @@ public class CourseFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.iv_classify:
-                Intent intent1 = new Intent(getActivity(), ClassifyActivity.class);
+                Intent intent1 = new Intent(getActivity(),ClassifyActivity.class);
                 startActivity(intent1);
                 getActivity().overridePendingTransition(R.anim.slide_in_left,R.anim.slide_none);
                 break;
