@@ -50,6 +50,11 @@ public class DownloadFragment extends Fragment {
         return view;
     }
 
+    /**
+     *
+     *
+     *
+     */
     private void getDiveceSize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());

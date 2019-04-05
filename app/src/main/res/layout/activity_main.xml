@@ -74,7 +74,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="3dp"
                 android:singleLine="true"
-                android:text="我的课程"
+                android:text="本地课程"
                 android:textColor="@color/tab_unselected"
                 android:textSize="12sp" />
         </RelativeLayout>

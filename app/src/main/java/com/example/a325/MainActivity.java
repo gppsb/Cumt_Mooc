@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case 3:
                     mtabMine.setBackgroundResource(R.drawable.mine_2);
-                    mtvDownload.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    mtvMine.setTextColor(getResources().getColor(R.color.colorPrimary));
                     break;
             }
 

@@ -8,22 +8,23 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary">
-        <!--<ImageView
+        <ImageView
             android:id="@+id/iv_classify"
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:src="@drawable/classify_selected"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"/>-->
+            android:layout_marginLeft="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MOOC"
-            android:textSize="18sp"
-            android:textColor="@android:color/white"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"/>
+            android:layout_marginLeft="16dp"
+            android:text="MOOC"
+            android:textColor="@android:color/white"
+            android:layout_toRightOf="@+id/iv_classify"
+            android:textSize="18sp" />
 
 
         <ImageView
