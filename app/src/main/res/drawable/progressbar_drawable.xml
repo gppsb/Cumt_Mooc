@@ -5,7 +5,7 @@
         <shape>
             <corners android:radius="2dp"/>
 
-            <solid android:color="@color/progressbar_bg"/>
+            <solid android:color="@android:color/white"/>
         </shape>
     </item>
 
@@ -14,7 +14,7 @@
             <shape>
                 <corners android:radius="2dp"/>
 
-                <solid android:color="@android:color/white"/>
+                <solid android:color="@android:color/black"/>
             </shape>
         </clip>
     </item>

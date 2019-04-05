@@ -30,8 +30,8 @@ public class DownloadFragment extends Fragment {
     TextView mtvCons;
     @Bind(R.id.tv_clear)
     TextView mtvClear;
-    @Bind(R.id.progressbar)
-    ProgressBar mprogressbar;
+    /*@Bind(R.id.progressbar)
+    ProgressBar mprogressbar;*/
 
     public DownloadFragment() {
         // Required empty public constructor
@@ -75,11 +75,11 @@ public class DownloadFragment extends Fragment {
         String occupyText = formatSize(blockSize * (totalBlocks - availableBlocks));
         String availableText = formatSize(blockSize * availableBlocks);
 
-        String text = "已占用" + occupyText + "，剩余" + availableText + "可用";
+        String text =  occupyText + "/" + availableText ;
         mtvCons.setText(text);
 
-        mprogressbar.setMax((int) totalBlocks);
-        mprogressbar.setProgress((int) (totalBlocks-availableBlocks));
+       /* mprogressbar.setMax((int) totalBlocks);
+        mprogressbar.setProgress((int) (totalBlocks-availableBlocks));*/
 
     }
 
