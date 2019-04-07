@@ -5,13 +5,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.a325.R;
+/*import com.example.a325.acitvities.CoursePlayActivity;*/
+import com.example.a325.acitvities.CoursePlayActivity;
 import com.example.a325.adapters.HomeAdapter;
 import com.example.a325.datas.CourseListData;
 import com.example.a325.utils.HttpRequest;
@@ -28,11 +32,12 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener , ListView.OnItemClickListener{
 
 
 
@@ -72,6 +77,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initLocalBanner();
         initLocalCourse();
 
+
         return view;
     }
 
@@ -81,8 +87,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mCourseDatas = new ArrayList<>();
         mAdapter = new HomeAdapter(getActivity(),mCourseDatas);
         mlistview.setAdapter(mAdapter);
+        mlistview.setOnItemClickListener(this);
 
         mBanner = ButterKnife.findById(mHeaderView,R.id.banner);
+
     }
     private void setupClick(){
 
@@ -106,6 +114,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
         mAdapter.notifyDataSetChanged();
     }
+
+
     /*private class CourseListAsyncTask extends AsyncTask<String,Void,String>{
 
         @Override
@@ -174,9 +184,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Intent intent = new Intent(getActivity(), CoursePlayActivity.class);
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
     }
 }
