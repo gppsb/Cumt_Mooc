@@ -1,6 +1,7 @@
 package com.example.a325.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,9 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.a325.R;
-import com.example.a325.adapters.ClassifyAdapter;
-import com.example.a325.datas.ClassifyData;
-import com.example.a325.datas.CourseListData;
+import com.example.a325.acitvities.ClassifyActivity;
+import com.example.a325.acitvities.CoursePlayActivity;
+import com.example.a325.adapters.AllCourseAdapter;
+import com.example.a325.datas.AllCourseData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AllCourseFragment extends Fragment implements View.OnClickListener, ClassifyAdapter.OnItemClickListener{
+public class AllCourseFragment extends Fragment implements View.OnClickListener, AllCourseAdapter.OnItemClickListener{
 
     @Bind(R.id.iv_classify)
     ImageView mivClassify;
@@ -33,8 +35,8 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener,
     @Bind(R.id.recycler)
     RecyclerView mrecycler;
 
-    private List<ClassifyData> listDatas; //课程分类数据列表
-    private ClassifyAdapter mAdapter;   //RecyclerView装载器
+    private List<AllCourseData> listDatas; //课程分类数据列表
+    private AllCourseAdapter mAdapter;   //RecyclerView装载器
 
     public AllCourseFragment() {
         // Required empty public constructor
@@ -56,7 +58,7 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener,
 
     private void init(){
         listDatas = new ArrayList<>();
-        mAdapter = new ClassifyAdapter(getActivity(),listDatas);
+        mAdapter = new AllCourseAdapter(getActivity(),listDatas);
         mAdapter.setOnItemClickListener(this);
         mrecycler.setAdapter(mAdapter);
 
@@ -75,8 +77,8 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener,
     }
 
     private void initLocalClassify(){
-        ClassifyData tit = new ClassifyData();
-        ClassifyData con = new ClassifyData();
+        AllCourseData tit = new AllCourseData();
+        AllCourseData con = new AllCourseData();
         for(int i =0; i<3; i++){
             tit.setName("title"+i);
             tit.setNumbers(0);
@@ -102,7 +104,8 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onItemClick(View view, int position) {
-
+        Intent intent = new Intent(getActivity(), ClassifyActivity.class);
+        startActivity(intent);
     }
 
     @Override

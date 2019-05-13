@@ -1,6 +1,6 @@
 package com.example.a325.datas;
 
-public class ClassifyData {
+public class AllCourseData {
 
     private int id;
     private String name;    //列表项名称

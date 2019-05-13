@@ -11,15 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.a325.R;
 /*import com.example.a325.acitvities.CoursePlayActivity;*/
+import com.example.a325.acitvities.ClassifyActivity;
 import com.example.a325.acitvities.CoursePlayActivity;
 import com.example.a325.adapters.HomeAdapter;
+import com.example.a325.datas.BannerData;
 import com.example.a325.datas.CourseListData;
 import com.example.a325.utils.HttpRequest;
 import com.example.a325.utils.HttpUrl;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.recker.flybanner.FlyBanner;
 
 import org.json.JSONArray;
@@ -37,7 +42,8 @@ import butterknife.OnItemClick;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener , ListView.OnItemClickListener{
+public class HomeFragment extends Fragment implements View.OnClickListener , ListView.OnItemClickListener
+    ,FlyBanner.OnItemClickListener{
 
 
 
@@ -50,11 +56,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
     @Bind(R.id.listview)
     ListView mlistview;
 
+    private LinearLayout mTab_One;//公考
+    private LinearLayout mTab_Two;//财会考试
+
 
     private View mHeaderView;
     private HomeAdapter mAdapter;
     private List<CourseListData> mCourseDatas;
     private FlyBanner mBanner;
+    private List<BannerData> mBannerDatas;
 
 
     public HomeFragment() {
@@ -69,19 +79,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
+
         init();
-        setupClick();
-
-       // new CourseListAsyncTask().execute();    //课程列表数据载入
-
-        initLocalBanner();
-        initLocalCourse();
-
+        new BannerAsyncTask().execute();
+        new CourseListAsyncTask().execute();
 
         return view;
     }
 
     private void init(){
+        initView();
+        setupClick();
+
+    }
+
+    private void initView(){
         mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_home_header,null);
         mlistview.addHeaderView(mHeaderView);
         mCourseDatas = new ArrayList<>();
@@ -90,97 +102,92 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         mlistview.setOnItemClickListener(this);
 
         mBanner = ButterKnife.findById(mHeaderView,R.id.banner);
+        mBanner.setOnItemClickListener(this);
+
+        mTab_One = ButterKnife.findById(mHeaderView,R.id.tab_one);
+        mTab_Two = ButterKnife.findById(mHeaderView, R.id.tab_two);
 
     }
     private void setupClick(){
-
+        mTab_One.setOnClickListener(this);
+        mTab_Two.setOnClickListener(this);
     }
-
-    private void initLocalBanner(){
-        List<Integer> images = new ArrayList<>();
-        images.add(R.drawable.course_local);
-        images.add(R.drawable.course_local1);
-        images.add(R.drawable.course_local2);
-        mBanner.setImages(images);
-    }
-    private void initLocalCourse(){
-        for(int i = 0; i < 7; i++){
-            CourseListData data = new CourseListData();
-
-           data.setName("课程"+i);
-           data.setNumbers(i);
-           data.setFinished(4);
-           mCourseDatas.add(data);
-        }
-        mAdapter.notifyDataSetChanged();
-    }
-
-
-    /*private class CourseListAsyncTask extends AsyncTask<String,Void,String>{
-
+    private class CourseListAsyncTask extends AsyncTask<Void,Void,String>{
         @Override
-        protected String doInBackground(String... strings) {
+        protected String doInBackground(Void... voids) {
             String url = HttpUrl.getInstance().getCourseListUrl();
-            Map<String, String> params = HttpUrl.getInstance().getCourseListParams(1);
-
-            return HttpRequest.getInstance().POST(url, params);
+            return HttpRequest.getInstance().POST(url,null);
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.e("CourseList",s);
             analysisCourseListJsonData(s);
+        }
+    }
+
+
+
+    private class BannerAsyncTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String url = HttpUrl.getInstance().getBannerUrl();
+
+            return HttpRequest.getInstance().POST(url,null);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            analysisBannnerJsonData(s);
 
         }
     }
+
+    private void analysisBannnerJsonData(String s) {
+        mBannerDatas = new ArrayList<>();
+        Gson gson = new Gson();
+        mBannerDatas =   gson.fromJson(s ,new TypeToken<List<BannerData>>(){}.getType());
+        setBanner();
+    }
+
     private void analysisCourseListJsonData(String s) {
-        try {
-            JSONObject object = new JSONObject(s);
-            int errorCode = object.getInt("errorCode");
-
-            if (errorCode == 1000) {
-                JSONArray array = object.getJSONArray("data");
-
-                for (int i = 0; i< array.length(); i++) {
-                    CourseListData data = new CourseListData();
-                    object = array.getJSONObject(i);
-
-                    data.setId(object.getInt("id"));
-                    data.setName(object.getString("name"));
-                    data.setPic(object.getString("pic"));
-                    data.setDesc(object.getString("desc"));
-                    data.setIsLearned(object.getInt("is_learned"));
-                    data.setCompanyId(object.getInt("company_id"));
-                    data.setNumbers(object.getInt("numbers"));
-                    data.setUpdateTime(object.getLong("update_time"));
-                    data.setCoursetype(object.getInt("coursetype"));
-                    data.setDuration(object.getLong("duration"));
-                    data.setFinished(object.getInt("finished"));
-                    data.setIsFollow(object.getInt("is_follow"));
-                    data.setMaxChapterSeq(object.getInt("max_chapter_seq"));
-                    data.setMaxMediaSeq(object.getInt("max_media_seq"));
-                    data.setLastTime(object.getLong("last_time"));
-                    data.setChapterSeq(object.getInt("chapter_seq"));
-                    data.setMediaSeq(object.getInt("media_seq"));
-
-//                    debug(data.toString());
-                    mCourseDatas.add(data);
-                }
-
-                mAdapter.notifyDataSetChanged();
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        List<CourseListData> mCourseDatas2 = new ArrayList<>();
+        Gson gson = new Gson();
+        mCourseDatas2 = gson.fromJson(s,new TypeToken<List<CourseListData>>(){}.getType());
+        mCourseDatas.addAll(mCourseDatas2);
+        mAdapter.notifyDataSetChanged();
     }
-*/
+
+    private void setBanner() {
+        List<String> imgs = new ArrayList<String>();
+        for(BannerData data : mBannerDatas){
+            imgs.add(data.getPic());
+        }
+        mBanner.setImagesUrl(imgs);
+
+    }
 
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.tab_one:
+                Intent intent1 = new Intent(getActivity(), ClassifyActivity.class);
+                startActivity(intent1);
+                getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
 
+                break;
+            case R.id.tab_two:
+                Intent intent2 = new Intent(getActivity(), ClassifyActivity.class);
+                startActivity(intent2);
+                getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
+
+                break;
+        }
 
     }
 
@@ -192,10 +199,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         ButterKnife.unbind(this);
     }
 
+    /**
+     *
+     * listView点击事件
+     * @param adapterView
+     * @param view
+     * @param i
+     * @param l
+     */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent(getActivity(), CoursePlayActivity.class);
             startActivity(intent);
             getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
     }
+
+    /**
+     *
+     * flyBanner点击事件
+     * @param position
+     */
+    @Override
+    public void onItemClick(int position) {
+        Intent intent = new Intent(getActivity(), CoursePlayActivity.class);
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
+    }
+
+
 }

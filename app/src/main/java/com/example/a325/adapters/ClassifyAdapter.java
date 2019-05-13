@@ -10,60 +10,47 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.a325.R;
-import com.example.a325.datas.ClassifyData;
+import com.example.a325.acitvities.ClassifyActivity;
 import com.example.a325.datas.CourseListData;
 import com.squareup.picasso.Picasso;
 
-import java.awt.font.TextAttribute;
 import java.util.List;
 
 import butterknife.ButterKnife;
 
 public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.ViewHolder> {
 
-    private List<ClassifyData> listDatas;
-    private LayoutInflater inflater;
+    private List<CourseListData> listDatas;
     private Context mContext;
+    private LayoutInflater inflater;
 
-    public ClassifyAdapter(Context context , List<ClassifyData> list) {
+    public ClassifyAdapter(Context context, List<CourseListData> list){
         listDatas = list;
-        inflater = LayoutInflater.from(context);
         mContext = context;
+        inflater = LayoutInflater.from(context);
     }
-
-
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder( ViewGroup viewGroup, int viewType) {
-        if(viewType == 0){//title
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_allcourse_item_title, viewGroup, false);
-            view.setTag(0);
-            return new ViewHolder(view);
-        }else {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_allcourse_item_content, viewGroup,false);
-            view.setTag(1);
-            return new ViewHolder(view);
-        }
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_home_item, viewGroup, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder( ViewHolder viewHolder, int position) {
-            ClassifyData data = listDatas.get(position);
-            if(isSection(position)){
-                viewHolder.title.setText(data.getName());
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
+            CourseListData data = listDatas.get(i);
+            Picasso.with(mContext).load(R.drawable.course_local1).into(viewHolder.img);
+            viewHolder.title.setText(data.getName()+"");
+            viewHolder.numbers.setText(data.getNumbers()+"");
+            if(data.getFinished() == 0){
+                viewHolder.finished.setTextColor(mContext.getResources().getColor(R.color.course_update_text));
+                String update = "更新至"+data.getMaxChapterSeq()+"-"+data.getMaxMediaSeq();
+                viewHolder.finished.setText(update);
             }else {
-                Picasso.with(mContext).load(R.drawable.allcourse_learnedcount_icon).into(viewHolder.image);
-                viewHolder.name.setText(data.getName()+"");
-                viewHolder.number.setText(data.getNumbers()+"");
-
+                viewHolder.finished.setTextColor(mContext.getResources().getColor(R.color.course_second_text));
+                viewHolder.finished.setText("更新完成");
             }
-
-    }
-
-    public boolean isSection(int position) {
-        if (listDatas.get(position).isTitle())
-            return true;
-
-        return false;
     }
 
     @Override
@@ -72,35 +59,33 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
+        ImageView img;
         TextView title;
+        TextView numbers;
+        TextView finished;
 
-        TextView name;
-        TextView number;
-        ImageView image;
-        public ViewHolder(final View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
-            if((int) itemView.getTag() == 0){//title
-                title = ButterKnife.findById(itemView,R.id.tv_title);
-            }else {//context
-                name = ButterKnife.findById(itemView,R.id.tv_name);
-                number = ButterKnife.findById(itemView,R.id.tv_number);
-                image = ButterKnife.findById(itemView,R.id.image);
-            }
+            img = ButterKnife.findById(itemView, R.id.img);
+            title = ButterKnife.findById(itemView,R.id.tv_title);
+            numbers = ButterKnife.findById(itemView, R.id.tv_number);
+            finished = ButterKnife.findById(itemView, R.id.tv_finished);
 
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(itemClickListener != null){
+                        itemClickListener.onItemClick(itemView, getLayoutPosition());
+                    }
+                }
+            });
         }
+
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (isSection(position))
-            return 0;
 
-        return 1;
-    }
 
-    public OnItemClickListener itemClickListener;
+    public ClassifyAdapter.OnItemClickListener itemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;

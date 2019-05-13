@@ -1,24 +1,36 @@
 package com.example.a325;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.a325.fragments.AllCourseFragment;
 import com.example.a325.fragments.DownloadFragment;
 import com.example.a325.fragments.HomeFragment;
 import com.example.a325.fragments.MineFragment;
+import com.example.a325.test.HttpConnection;
+import com.example.a325.test.User;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -47,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DownloadFragment mDownloadFragment;
     private MineFragment mMineFragment;
 
+    public static final String TAG="MainActivity";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +72,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupContent();
         setupTabClick();
 
+
+
     }
+
+
 
     private void setupContent(){
         initFragments();
@@ -163,4 +182,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+
+
+    public boolean isConnectingToInternet() {
+        ConnectivityManager connectivity = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
+        }
+        return false;
+    }
 }
+
+
+
+
+
+//test网络功能
+//    private void test() {
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                User user = new User();
+////                user.setId(editText_id.getText().toString());
+////                user.setPassword(editText_password.getText().toString());
+//
+//                String address = "http://192.168.137.1:8080/ResponServlet";
+//                HttpConnection.sendOkHttpRequest(address, user, new okhttp3.Callback(){
+//                    @Override
+//                    public void onFailure(Call call, IOException e) {
+//                        Log.d(MainActivity.TAG,"连接失败");
+//                    }
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+//                        String responseData = response.body().string();
+//                        System.out.println("响应信息： " + responseData);
+//                        parseJSONWithGSON(responseData);
+//                        Log.d("2","链接成功");
+//
+//                        Looper.prepare();
+//                        Toast.makeText(MainActivity.this, "succeed", Toast.LENGTH_SHORT).show();
+//                        Looper.loop();
+//                    }
+//                });
+//
+//            }
+//        }).start();
+//
+//
+//    }
+//    public void parseJSONWithGSON(String jsonData){
+//        Gson gson = new Gson();
+//        User user = gson.fromJson(jsonData, User.class);
+//        // Log.d(MainActivity.TAG,"no = " + user.getNo());
+//        Log.d(MainActivity.TAG,"id = " + user.getId());
+//        Log.d(MainActivity.TAG,"password = " + user.getPassword());
+//    }
+//
+//    //test网络功能

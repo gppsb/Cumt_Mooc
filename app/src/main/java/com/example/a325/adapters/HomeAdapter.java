@@ -61,9 +61,8 @@ public class HomeAdapter extends BaseAdapter {
         }else {
             holder = (ViewHolder) view.getTag();
         }
+        Picasso.with(mContext).load(data.getPic()).placeholder(R.drawable.course_default_bg).into(holder.img);
 
-        //Picasso.with(mContext).load(data.getPic()).into(holder.img);
-        Picasso.with(mContext).load(R.drawable.course_local1).into(holder.img);
 
         holder.title.setText(data.getName()+" ");
         holder.numbers.setText(data.getNumbers()+"");

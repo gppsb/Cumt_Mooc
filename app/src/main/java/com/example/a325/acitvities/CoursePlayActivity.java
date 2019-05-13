@@ -6,10 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.example.a325.R;
 import com.example.a325.bases.BaseActivity;
@@ -24,32 +21,34 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.vov.vitamio.Vitamio;
+import io.vov.vitamio.widget.VideoView;
 
 public class CoursePlayActivity extends BaseActivity {
 
 
     @Bind(R.id.tv_title)
     TextView mtvTitle;
-@Bind(R.id.videoView)
-    VideoView mvideoView;
-
     @Bind(R.id.tablayout)
     TabLayout mtablayout;
     @Bind(R.id.viewpager)
     ViewPager mviewpager;
 
+    @Bind(R.id.videoView)
+    VideoView mvideoView;
+
 
     private int mId;//课程编号
     private String mTitle;//课程名称
     private MediaData mMediaDate;//课程信息
-    private String[] mTitles = {"课程简介", "课程大纲", "评论"};//TableLayout
+    private String[] mTitles = {"课程简介", "课程大纲", "测试"};//TableLayout
     private List<Fragment> mFragments;//存放三个碎片
     //三个碎片
     private Courseplay_IntroFragment mIntroFragment;
     private Courseplay_ListFragment mListFragment;
     private Courseplay_CommentFragment mCommentFragment;
 
- @Override
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_course_play;
     }
@@ -61,6 +60,8 @@ public class CoursePlayActivity extends BaseActivity {
 
         mtvTitle.setText("课程x");//本地
         //setVideoView
+        Vitamio.isInitialized(this);
+        mvideoView.setVideoPath("http://192.168.137.1:8080/vid/video.mp4");
         setupViewPager();
 
 
@@ -107,10 +108,16 @@ public class CoursePlayActivity extends BaseActivity {
         mFragments.add(mCommentFragment);
     }
 
-@OnClick(R.id.iv_back) void Onclick(){
+    @OnClick(R.id.iv_back)
+    void Onclick() {
         finish();
     }
 
 
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }
