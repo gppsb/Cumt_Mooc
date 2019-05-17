@@ -27,17 +27,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.recker.flybanner.FlyBanner;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -122,7 +116,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("CourseList",s);
+            //Log.e("CourseList",s);
             analysisCourseListJsonData(s);
         }
     }
@@ -141,7 +135,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
+            Log.e("banner",s);
             analysisBannnerJsonData(s);
 
         }
@@ -177,12 +171,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         switch (view.getId()){
             case R.id.tab_one:
                 Intent intent1 = new Intent(getActivity(), ClassifyActivity.class);
+                intent1.putExtra("id",2);
+                intent1.putExtra("name","公务员考试");
                 startActivity(intent1);
                 getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
 
                 break;
             case R.id.tab_two:
                 Intent intent2 = new Intent(getActivity(), ClassifyActivity.class);
+                intent2.putExtra("id",3);
+                intent2.putExtra("name","金融财会考试");
                 startActivity(intent2);
                 getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
 
@@ -210,6 +208,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent(getActivity(), CoursePlayActivity.class);
+            int Id = mCourseDatas.get(i-1).getId();
+            String title = mCourseDatas.get(i-1).getName();
+            intent.putExtra("id",Id);
+            intent.putExtra("title",title);
             startActivity(intent);
             getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
     }
@@ -222,6 +224,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent(getActivity(), CoursePlayActivity.class);
+        int Id = mBannerDatas.get(position).getId();
+        String title = mBannerDatas.get(position).getName();
+        intent.putExtra("id",Id);
+        intent.putExtra("title",title);
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
     }

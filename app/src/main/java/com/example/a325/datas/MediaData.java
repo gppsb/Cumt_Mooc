@@ -1,14 +1,11 @@
 package com.example.a325.datas;
 
-/**
- * Created by recker on 16/5/31.
- * Media11
- */
+
 public class MediaData {
 
-    private int mediaId;
+    private int mediaId;//id
 
-    private String name;
+    private String name;//name
 
     private int type;
 

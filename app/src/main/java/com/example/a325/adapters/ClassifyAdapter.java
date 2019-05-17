@@ -40,7 +40,7 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
             CourseListData data = listDatas.get(i);
-            Picasso.with(mContext).load(R.drawable.course_local1).into(viewHolder.img);
+            Picasso.with(mContext).load(data.getPic()).into(viewHolder.img);
             viewHolder.title.setText(data.getName()+"");
             viewHolder.numbers.setText(data.getNumbers()+"");
             if(data.getFinished() == 0){

@@ -16,19 +16,20 @@ public class HttpUrl {
     //课程列表请求URL
     private String mCourseListUrl = mHostName + "/api/getCourseList";
     //课程分类列表URL
-    private String mClassifyCourseUrl = mHostName + "/api3/newcourseskill";
-    //求职路线计划URL
-    private String mJobLineUrl = mHostName +"/api3/program";
-    //加薪利器URL
-    private String mRaiseweaponUrl = mHostName + "/api3/program";
+    private String mClassifyCourseUrl = mHostName + "/api/getClassifyCourse";
+    //获取视频信息
+    private String mMediaInfo = mHostName + "/api/getMediaInfo";
+
+
+
+
+
     //分类课程列表
     private String mClassifyListUrl = mHostName+"/api3/courselist_ver2";
     //社区文章
     private String mArticleListUrl = mHostName + "/api3/articlelist";
     //文章内容
     private String mArticleContent = mHostName + "/api3/articlecontent";
-    //获取视频信息
-    private String mMediaInfo = mHostName + "/api3/getmediainfo_ver2";
     //获取视频章节信息
     private String mCpInfo = mHostName + "/api3/getcpinfo_ver2";
     //获取课程评论列表
@@ -65,14 +66,6 @@ public class HttpUrl {
         return mClassifyCourseUrl;
     }
 
-    public String getJobLineUrl() {
-        return mJobLineUrl;
-    }
-
-    public String getRaiseweaponUrl() {
-        return mRaiseweaponUrl;
-    }
-
     public String getClassifListUrl() {
         return mClassifyListUrl;
     }
@@ -103,6 +96,20 @@ public class HttpUrl {
 
     public String getRelevantCourse() {
         return mRelevantCourse;
+    }
+
+    /**
+     * 获取视频信息参数
+     * @param id
+     * @return
+     */
+    public Map<String, String> getMediaInfoParams(String id) {
+        Map<String, String> params = new HashMap<>();
+
+        params.put("cid", id);
+
+
+        return params;
     }
 
     /**
@@ -234,20 +241,7 @@ public class HttpUrl {
         return params;
     }
 
-    /**
-     * 获取视频信息参数
-     * @param id
-     * @return
-     */
-    public Map<String, String> getMediaInfoParams(String id) {
-        Map<String, String> params = new HashMap<>();
 
-        params.put("cid", id);
-        params.put("uid", "2902109");
-        params.put("token", "ee292734814af1f4804f676c51e3337d");
-
-        return params;
-    }
 
     /**
      * 获取视频章节参数

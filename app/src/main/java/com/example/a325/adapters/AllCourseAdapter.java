@@ -36,7 +36,7 @@ public class AllCourseAdapter extends RecyclerView.Adapter<AllCourseAdapter.View
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_allcourse_item_title, viewGroup, false);
             view.setTag(0);
             return new ViewHolder(view);
-        }else {
+        }else {//content
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_allcourse_item_content, viewGroup,false);
             view.setTag(1);
             return new ViewHolder(view);
@@ -49,7 +49,7 @@ public class AllCourseAdapter extends RecyclerView.Adapter<AllCourseAdapter.View
         if(isSection(position)){
             viewHolder.title.setText(data.getName());
         }else {
-            Picasso.with(mContext).load(R.drawable.allcourse_learnedcount_icon).into(viewHolder.image);
+            Picasso.with(mContext).load(R.drawable.allcourse).into(viewHolder.image);
             viewHolder.name.setText(data.getName()+"");
             viewHolder.number.setText(data.getNumbers()+"");
 
