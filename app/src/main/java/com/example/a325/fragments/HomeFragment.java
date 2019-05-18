@@ -135,7 +135,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("banner",s);
+           // Log.e("banner",s);
             analysisBannnerJsonData(s);
 
         }

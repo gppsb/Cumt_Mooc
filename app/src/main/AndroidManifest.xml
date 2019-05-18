@@ -27,6 +27,13 @@
             android:name="com.google.android.actions"
             android:resource="@xml/network_security_config" />
 
+        <activity
+            android:name="io.vov.vitamio.activity.InitActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <activity android:name=".acitvities.ClassifyActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -35,7 +42,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".acitvities.CoursePlayActivity"/>
+        <activity android:name=".acitvities.CoursePlayActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
 
 
 

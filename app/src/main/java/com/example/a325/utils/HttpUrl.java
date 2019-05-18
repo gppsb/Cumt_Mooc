@@ -19,10 +19,41 @@ public class HttpUrl {
     private String mClassifyCourseUrl = mHostName + "/api/getClassifyCourse";
     //获取视频信息
     private String mMediaInfo = mHostName + "/api/getMediaInfo";
+    //获取课程简介信息
+    private String mCourseIntro = mHostName + "/api/getCourseIntro";
+    //获取视频章节信息
+    private String mCpInfo = mHostName + "/api/getCpInfo";
 
 
+    /**
+     * 获取课程简介参数
+     * @param id
+     * @return
+     */
+    public Map<String, String> getCourseIntroParams(String id) {
+        Map<String, String> params = new HashMap<>();
 
+        params.put("cid", id);
+        params.put("uid", "2902109");
+        params.put("token", "54368c2b6bdb7bd22505ba6666ad5dad");
 
+        return params;
+    }
+
+    /**
+     * 获取视频章节参数
+     * @param id
+     * @return
+     */
+    public Map<String, String> getCpInfoParams(String id) {
+        Map<String, String> params = new HashMap<>();
+
+        params.put("cid", id);
+        params.put("uid", "2902109");
+        params.put("token", "56f37d20c0e34b9980b3cf910e35f342");
+
+        return params;
+    }
 
     //分类课程列表
     private String mClassifyListUrl = mHostName+"/api3/courselist_ver2";
@@ -30,12 +61,8 @@ public class HttpUrl {
     private String mArticleListUrl = mHostName + "/api3/articlelist";
     //文章内容
     private String mArticleContent = mHostName + "/api3/articlecontent";
-    //获取视频章节信息
-    private String mCpInfo = mHostName + "/api3/getcpinfo_ver2";
     //获取课程评论列表
     private String mCourseCommentList = mHostName + "/api3/coursecommentlist";
-    //获取课程简介信息
-    private String mCourseIntro = mHostName + "/api3/getcourseintro";
     //获取推荐课程列表
     private String mRelevantCourse = mHostName + "/api3/getrelevantcourse";
 
@@ -243,20 +270,7 @@ public class HttpUrl {
 
 
 
-    /**
-     * 获取视频章节参数
-     * @param id
-     * @return
-     */
-    public Map<String, String> getCpInfoParams(String id) {
-        Map<String, String> params = new HashMap<>();
 
-        params.put("cid", id);
-        params.put("uid", "2902109");
-        params.put("token", "56f37d20c0e34b9980b3cf910e35f342");
-
-        return params;
-    }
 
     /**
      * 获取课程评论列表参数
@@ -275,20 +289,6 @@ public class HttpUrl {
         return params;
     }
 
-    /**
-     * 获取课程简介参数
-     * @param id
-     * @return
-     */
-    public Map<String, String> getCourseIntroParams(String id) {
-        Map<String, String> params = new HashMap<>();
-
-        params.put("cid", id);
-        params.put("uid", "2902109");
-        params.put("token", "54368c2b6bdb7bd22505ba6666ad5dad");
-
-        return params;
-    }
 
     /**
      * 获取推荐课程列表参数

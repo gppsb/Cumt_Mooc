@@ -1,6 +1,8 @@
 package com.example.a325.acitvities;
 
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -8,8 +10,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -32,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.Vitamio;
@@ -72,15 +78,19 @@ public class CoursePlayActivity extends BaseActivity {
     ImageView ivFullscreen;
     @Bind(R.id.video_bg)
     RelativeLayout videoBg;
+    @Bind(R.id.main_view)
+    FrameLayout mMainView;
+    @Bind(R.id.toolbar)
+    RelativeLayout mToolbar;
 
 
     private int mId;//课程编号
     private String mTitle;//课程名称
-    private String[] mTitles = {"课程简介", "课程大纲", "测试"};//TableLayout
+    private String[] mTitles = {"课程简介", "课程大纲"};//TableLayout
     private List<Fragment> mFragments;
     private Courseplay_IntroFragment mIntroFragment;
     private Courseplay_ListFragment mListFragment;
-    private Courseplay_CommentFragment mCommentFragment;
+    //private Courseplay_CommentFragment mCommentFragment;
 
     private MediaController mMediaController;
     private MediaData mMediaData;
@@ -95,6 +105,9 @@ public class CoursePlayActivity extends BaseActivity {
     private boolean mIsSlide = false;
     //是否播放结束
     private boolean mIsPlayEnd = false;
+    //是否全屏
+    private boolean mIsFullScreen = false;
+
 
     /**
      * 设置时间控制
@@ -140,17 +153,26 @@ public class CoursePlayActivity extends BaseActivity {
         setupViewPager();
         Vitamio.isInitialized(this);
 
+
+
         new MediaAsyncTask().execute();
         setupSeekBarChanged();
     }
 
-    private class MediaAsyncTask extends AsyncTask<Void,Void,String> {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
+
+    private class MediaAsyncTask extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
             String url = HttpUrl.getInstance().getMediaInfo();
 
-            Map<String, String> params = HttpUrl.getInstance().getMediaInfoParams(mId+"");
-            Log.e("id","course id is"+mId);
+            Map<String, String> params = HttpUrl.getInstance().getMediaInfoParams(mId + "");
+          //  Log.e("id", "course id is" + mId);
 
             return HttpRequest.getInstance().POST(url, params);
         }
@@ -158,7 +180,7 @@ public class CoursePlayActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("MediaData",s);
+           // Log.e("MediaData", s);
 
             analysisJsonData(s);
         }
@@ -166,8 +188,8 @@ public class CoursePlayActivity extends BaseActivity {
 
     private void analysisJsonData(String s) {
         Gson gson = new Gson();
-        mMediaData = gson.fromJson(s,MediaData.class);
-        Log.e("MeidaUrl",mMediaData.getMediaUrl());
+        mMediaData = gson.fromJson(s, MediaData.class);
+       // Log.e("MeidaUrl", mMediaData.getMediaUrl());
         setupPlay();
     }
 
@@ -198,7 +220,7 @@ public class CoursePlayActivity extends BaseActivity {
         mvideoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                switch (what){
+                switch (what) {
                     case MediaPlayer.MEDIA_INFO_BUFFERING_START:
                         if (mvideoView.isPlaying()) {
                             mvideoView.pause();
@@ -231,6 +253,7 @@ public class CoursePlayActivity extends BaseActivity {
 
 
     }
+
     private void setupSeekBarChanged() {
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -251,7 +274,7 @@ public class CoursePlayActivity extends BaseActivity {
                 //滑动完后设置为假
                 mIsSlide = false;
 
-                startDuration = (long) ((seekBar.getProgress()*1.0 / 1000) * mTotalDuration);
+                startDuration = (long) ((seekBar.getProgress() * 1.0 / 1000) * mTotalDuration);
                 tvTime.setText(sec2time(startDuration) + "/" + mTotalDurationStr);
                 mvideoView.seekTo(startDuration);
 
@@ -283,12 +306,12 @@ public class CoursePlayActivity extends BaseActivity {
         }
 
 
-
     }
 
 
     //视频播放控制按钮
-    @OnClick(R.id.play_control) void setupPlayClick() {
+    @OnClick(R.id.play_control)
+    void setupPlayClick() {
         if (mvideoView != null) {
             if (mvideoView.isPlaying()) {
                 pauseVideo();
@@ -300,12 +323,80 @@ public class CoursePlayActivity extends BaseActivity {
 
 
     //全屏键
-    @OnClick(R.id.iv_fullscreen) void fullScreen() {
-
+    @OnClick(R.id.iv_fullscreen)
+    void fullScreen() {
+        if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {//如果为全屏
+            setupUnFullScreen();
+        } else {//不为全屏
+            setupFullScreen();
+        }
     }
 
+    /**
+     * 设置为全屏
+     */
+    private void setupFullScreen() {
+        WindowManager.LayoutParams attrs = getWindow().getAttributes();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+
+        getWindow().setAttributes(attrs);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        WindowManager manager = this.getWindowManager();
+        DisplayMetrics metrics = new DisplayMetrics();
+        manager.getDefaultDisplay().getMetrics(metrics);
+
+        mMainView.getLayoutParams().width = metrics.widthPixels;
+        mMainView.getLayoutParams().height = metrics.heightPixels;
+
+        //设置为全屏拉伸
+        mvideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH, 0);
+
+        ivFullscreen.setImageResource(R.drawable.not_fullscreen);
+
+
+        mToolbar.setVisibility(View.GONE);
+        mtablayout.setVisibility(View.GONE);
+        mviewpager.setVisibility(View.GONE);
+
+        mIsFullScreen = true;
+    }
+
+    /**
+     * 设置为非全屏
+     */
+    private void setupUnFullScreen() {
+        WindowManager.LayoutParams attrs = getWindow().getAttributes();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        getWindow().setAttributes(attrs);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        float width = getResources().getDisplayMetrics().heightPixels;
+        float height = dp2px(200.f);
+        mMainView.getLayoutParams().width = (int) width;
+        mMainView.getLayoutParams().height = (int) height;
+
+        //设置为全屏
+        mvideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
+        ivFullscreen.setImageResource(R.drawable.play_fullscreen);
+
+        mToolbar.setVisibility(View.VISIBLE);
+        mtablayout.setVisibility(View.VISIBLE);
+        mviewpager.setVisibility(View.VISIBLE);
+
+        mIsFullScreen = false;
+    }
+
+    private int dp2px(float dpValue) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
     //显示视频控制器
-    @OnClick(R.id.main_view) void showVideoControl() {
+    @OnClick(R.id.main_view)
+    void showVideoControl() {
         if (videoBg.getVisibility() == View.GONE) {
             videoBg.setVisibility(View.VISIBLE);
             if (mvideoView.isPlaying()) {
@@ -318,12 +409,14 @@ public class CoursePlayActivity extends BaseActivity {
     }
 
     //返回键
-    @OnClick(R.id.iv_back) void onBack() {
+    @OnClick(R.id.iv_back)
+    void onBack() {
         finish();
     }
 
 
     private String sec2time(long time) {
+        //Log.e("timemmm","非标准时间"+time);
         //初始化Formatter的转换格式。
         SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
         String hms = formatter.format(time);
@@ -365,10 +458,10 @@ public class CoursePlayActivity extends BaseActivity {
 
         mIntroFragment = new Courseplay_IntroFragment();
         mListFragment = new Courseplay_ListFragment();
-        mCommentFragment = new Courseplay_CommentFragment();
+       // mCommentFragment = new Courseplay_CommentFragment();
 
         mFragments.add(mIntroFragment);
         mFragments.add(mListFragment);
-        mFragments.add(mCommentFragment);
+       // mFragments.add(mCommentFragment);
     }
 }
