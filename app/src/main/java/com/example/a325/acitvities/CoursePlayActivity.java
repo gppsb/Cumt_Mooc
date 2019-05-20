@@ -1,5 +1,6 @@
 package com.example.a325.acitvities;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,11 +21,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.a325.R;
 import com.example.a325.bases.BaseActivity;
 import com.example.a325.datas.MediaData;
-import com.example.a325.fragments.Courseplay_CommentFragment;
 import com.example.a325.fragments.Courseplay_IntroFragment;
 import com.example.a325.fragments.Courseplay_ListFragment;
 import com.example.a325.utils.HttpRequest;
@@ -82,6 +83,8 @@ public class CoursePlayActivity extends BaseActivity {
     FrameLayout mMainView;
     @Bind(R.id.toolbar)
     RelativeLayout mToolbar;
+    @Bind(R.id.iv_like)
+    ImageView ivLike;
 
 
     private int mId;//课程编号
@@ -107,6 +110,10 @@ public class CoursePlayActivity extends BaseActivity {
     private boolean mIsPlayEnd = false;
     //是否全屏
     private boolean mIsFullScreen = false;
+    //是否喜欢
+    private boolean isLiked = false;
+    String uname = " ";
+    final String TAG = "CoursePlayActivity";
 
 
     /**
@@ -149,14 +156,117 @@ public class CoursePlayActivity extends BaseActivity {
         mTitle = getIntent().getStringExtra("title");
 
         mtvTitle.setText(mTitle);
+
+        islike();//判断本课程是否喜欢
         //setVideoView
         setupViewPager();
         Vitamio.isInitialized(this);
 
-
-
+        //加载数据
         new MediaAsyncTask().execute();
         setupSeekBarChanged();
+    }
+
+    private void islike() {
+        uname = getSharedPreferences("data", Context.MODE_PRIVATE).getString("user", " ");
+        if (!uname.equals(" ")) {
+            new isLikeAsyncTask().execute();
+        }
+    }
+
+    @OnClick(R.id.iv_like)
+    public void onClick() {
+        if (uname.equals(" ")){
+            Toast.makeText(getApplicationContext(), "您还未登录", Toast.LENGTH_SHORT).show();
+        }else {
+            if (isLiked == true){
+                new delLikeAsyncTask().execute();
+            }else {
+                new addLikeAsyncTask().execute();
+            }
+        }
+    }
+
+    private class delLikeAsyncTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String url = HttpUrl.getInstance().getOperateLikeUrl();
+
+            String type2 = "del";
+            Map<String, String> params = HttpUrl.getInstance().getOperateLikeParams(uname, mId, type2);
+
+            //Log.e(TAG,"isLike上传参数："+uname+" "+mId+" "+type1);
+            return HttpRequest.getInstance().POST(url, params);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            //Log.e(TAG, "delLike返回结果：" + s);
+
+            if ("true".equals(s.trim())) {
+                isLiked = false;
+                ivLike.setImageResource(R.drawable.unlike);
+            }
+        }
+    }
+
+    private class addLikeAsyncTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String url = HttpUrl.getInstance().getOperateLikeUrl();
+
+            String type3 = "add";
+            Map<String, String> params = HttpUrl.getInstance().getOperateLikeParams(uname, mId, type3);
+
+            //Log.e(TAG,"isLike上传参数："+uname+" "+mId+" "+type1);
+            return HttpRequest.getInstance().POST(url, params);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            //Log.e(TAG, "addLike返回结果：" + s);
+
+            if ("true".equals(s.trim())) {
+                //Log.e(TAG,"herehere");
+
+                isLiked = true;
+                ivLike.setImageResource(R.drawable.like);
+            }
+        }
+    }
+
+    private class isLikeAsyncTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String url = HttpUrl.getInstance().getOperateLikeUrl();
+
+            String type1 = "isLike";
+            Map<String, String> params = HttpUrl.getInstance().getOperateLikeParams(uname, mId, type1);
+
+            //Log.e(TAG,"isLike上传参数："+uname+" "+mId+" "+type1);
+            return HttpRequest.getInstance().POST(url, params);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            //Log.e(TAG, "islike返回结果：" + s+"equals:"+"true".equals(s.trim()));
+
+            if ("true".equals(s.trim())) {
+                //Log.e(TAG,"herehere");
+
+                isLiked = true;
+                ivLike.setImageResource(R.drawable.like);
+            }
+        }
     }
 
     @Override
@@ -172,7 +282,7 @@ public class CoursePlayActivity extends BaseActivity {
             String url = HttpUrl.getInstance().getMediaInfo();
 
             Map<String, String> params = HttpUrl.getInstance().getMediaInfoParams(mId + "");
-          //  Log.e("id", "course id is" + mId);
+            //  Log.e("id", "course id is" + mId);
 
             return HttpRequest.getInstance().POST(url, params);
         }
@@ -180,7 +290,7 @@ public class CoursePlayActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-           // Log.e("MediaData", s);
+            // Log.e("MediaData", s);
 
             analysisJsonData(s);
         }
@@ -189,7 +299,7 @@ public class CoursePlayActivity extends BaseActivity {
     private void analysisJsonData(String s) {
         Gson gson = new Gson();
         mMediaData = gson.fromJson(s, MediaData.class);
-       // Log.e("MeidaUrl", mMediaData.getMediaUrl());
+        // Log.e("MeidaUrl", mMediaData.getMediaUrl());
         setupPlay();
     }
 
@@ -394,6 +504,7 @@ public class CoursePlayActivity extends BaseActivity {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
+
     //显示视频控制器
     @OnClick(R.id.main_view)
     void showVideoControl() {
@@ -416,7 +527,7 @@ public class CoursePlayActivity extends BaseActivity {
 
 
     private String sec2time(long time) {
-        //Log.e("timemmm","非标准时间"+time);
+        Log.e("timemmm", "非标准时间" + time);
         //初始化Formatter的转换格式。
         SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
         String hms = formatter.format(time);
@@ -458,10 +569,10 @@ public class CoursePlayActivity extends BaseActivity {
 
         mIntroFragment = new Courseplay_IntroFragment();
         mListFragment = new Courseplay_ListFragment();
-       // mCommentFragment = new Courseplay_CommentFragment();
+        // mCommentFragment = new Courseplay_CommentFragment();
 
         mFragments.add(mIntroFragment);
         mFragments.add(mListFragment);
-       // mFragments.add(mCommentFragment);
+        // mFragments.add(mCommentFragment);
     }
 }

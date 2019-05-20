@@ -36,7 +36,7 @@ public class CpData {
 
     private int haveQues;
 
-    private int duration;
+    private int duration;//课程时间
 
     private long mediaSize;
 

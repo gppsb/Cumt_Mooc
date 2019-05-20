@@ -1,11 +1,6 @@
 package com.example.a325.datas;
 
-/**
- * Created by recker on 16/5/24.
- *
- * 广告栏数据
- *
- */
+
 public class BannerData {
 
     private int id;

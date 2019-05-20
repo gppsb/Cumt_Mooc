@@ -23,8 +23,46 @@ public class HttpUrl {
     private String mCourseIntro = mHostName + "/api/getCourseIntro";
     //获取视频章节信息
     private String mCpInfo = mHostName + "/api/getCpInfo";
+    //注册
+    private String RegisterUrl = mHostName+"/api/Register";
+    //登录
+    private String LoginUrl = mHostName+"/api/CheckUser";
+    //获得所有喜爱
+    private String AllLikeUrl = mHostName+"/api/getAllLike";
+    //操作喜欢url
+    private String operateLikeUrl = mHostName+"/api/operateLike";
 
 
+    //操作喜欢所需params
+    public Map<String, String> getOperateLikeParams(String uname,int cid,String type) {
+        Map<String,String> params = new HashMap<>();
+        params.put("uname",uname);
+        params.put("cid",String.valueOf(cid));
+        params.put("type",type);
+        return params;
+
+
+    }
+
+    //获得所有喜爱所需params
+    public Map<String, String> getAllLikeParams(String uname) {
+        Map<String,String> params = new HashMap<>();
+
+        params.put("uname",uname);
+        return params;
+    }
+
+
+
+        //获得用户params
+    public Map<String, String> getUserParams(String name,String password) {
+        Map<String,String> params = new HashMap<>();
+
+        params.put("name",name);
+        params.put("password",password);
+
+        return params;
+    }
     /**
      * 获取课程简介参数
      * @param id
@@ -80,11 +118,21 @@ public class HttpUrl {
         }
         return instance;
     }
-
+    public String getRegisterUrl() {
+        return RegisterUrl;
+    }
+    public String getAllLikeUrl() {
+        return AllLikeUrl;
+    }
+    public String getLoginUrl() {
+        return LoginUrl;
+    }
     public String getBannerUrl() {
         return mBannerUrl;
     }
-
+    public String getOperateLikeUrl() {
+        return operateLikeUrl;
+    }
     public String getCourseListUrl() {
         return mCourseListUrl;
     }

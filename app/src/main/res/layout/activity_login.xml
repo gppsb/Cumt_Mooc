@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.a325.acitvities.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_back"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+
+            <TextView
+                android:id="@+id/tv_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用户登录注册"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:layout_toRightOf="@+id/iv_back"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+
+
+        </RelativeLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="wrap_content"
+            android:layout_height="100sp"
+            android:layout_marginTop="40sp"
+            android:gravity="center"
+            android:src="@drawable/img_1"
+            />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="200sp"
+            android:layout_height="50dp"
+            android:layout_marginTop="60sp"
+            android:hint="账号名称"
+            android:gravity="center"
+            android:maxLines="1"
+            android:layout_gravity="center"
+            android:textSize="20sp"/>
+        <EditText
+            android:id="@+id/pass"
+            android:layout_width="200sp"
+            android:layout_height="50sp"
+            android:layout_marginTop="5sp"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:hint="密码"
+            android:password="true"
+            android:gravity="center"
+            android:textSize="20sp"/>
+        <Button
+            android:id="@+id/bt_login"
+            android:layout_width="200sp"
+            android:layout_height="40sp"
+            android:text="登录"
+            android:layout_marginTop="40sp"
+            android:layout_gravity="center"
+            android:background="#4169E1"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            />
+        <Button
+            android:id="@+id/bt_register"
+            android:layout_width="200sp"
+            android:layout_height="40sp"
+            android:text="注册"
+            android:layout_marginTop="40sp"
+            android:layout_gravity="center"
+            android:background="#4169E1"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            />
+
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

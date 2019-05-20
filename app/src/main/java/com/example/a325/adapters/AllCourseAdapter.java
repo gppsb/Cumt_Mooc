@@ -33,11 +33,13 @@ public class AllCourseAdapter extends RecyclerView.Adapter<AllCourseAdapter.View
     @Override
     public AllCourseAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         if(viewType == 0){//title
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_allcourse_item_title, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_allcourse_item_title
+                    , viewGroup, false);
             view.setTag(0);
             return new ViewHolder(view);
         }else {//content
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_allcourse_item_content, viewGroup,false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_allcourse_item_content
+                    , viewGroup,false);
             view.setTag(1);
             return new ViewHolder(view);
         }

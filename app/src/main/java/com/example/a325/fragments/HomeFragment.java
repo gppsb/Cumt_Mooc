@@ -18,6 +18,7 @@ import com.example.a325.R;
 /*import com.example.a325.acitvities.CoursePlayActivity;*/
 import com.example.a325.acitvities.ClassifyActivity;
 import com.example.a325.acitvities.CoursePlayActivity;
+import com.example.a325.acitvities.TestAcitvity;
 import com.example.a325.adapters.HomeAdapter;
 import com.example.a325.datas.BannerData;
 import com.example.a325.datas.CourseListData;
@@ -32,6 +33,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +49,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
     ImageView mivSearch;
     @Bind(R.id.iv_scan)
     ImageView mivScan;
+
+    @OnClick(R.id.iv_scan)
+    void onBack() {
+        Intent intx = new Intent(getActivity(), TestAcitvity.class);
+        startActivity(intx);
+    }
+
     @Bind(R.id.listview)
     ListView mlistview;
 
@@ -116,9 +125,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //Log.e("CourseList",s);
+            //Log.e("cousre",s);
             analysisCourseListJsonData(s);
         }
+    }
+    private void analysisCourseListJsonData(String s) {
+        List<CourseListData> mCourseDatas2 = new ArrayList<>();
+        Gson gson = new Gson();
+        mCourseDatas2 = gson.fromJson(s,new TypeToken<List<CourseListData>>(){}.getType());
+        mCourseDatas.addAll(mCourseDatas2);
+        mAdapter.notifyDataSetChanged();
     }
 
 
@@ -135,7 +151,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-           // Log.e("banner",s);
+            //Log.e("banner",s);
             analysisBannnerJsonData(s);
 
         }
@@ -148,22 +164,33 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         setBanner();
     }
 
-    private void analysisCourseListJsonData(String s) {
-        List<CourseListData> mCourseDatas2 = new ArrayList<>();
-        Gson gson = new Gson();
-        mCourseDatas2 = gson.fromJson(s,new TypeToken<List<CourseListData>>(){}.getType());
-        mCourseDatas.addAll(mCourseDatas2);
-        mAdapter.notifyDataSetChanged();
-    }
+
 
     private void setBanner() {
         List<String> imgs = new ArrayList<String>();
+
         for(BannerData data : mBannerDatas){
-            imgs.add(data.getPic());
+            Log.e("bannerpic",data.getPic());
+           imgs.add(data.getPic());
         }
         mBanner.setImagesUrl(imgs);
-
     }
+    /**
+     *
+     * flyBanner点击事件
+     * @param position
+     */
+    @Override
+    public void onItemClick(int position) {
+        Intent intent = new Intent(getActivity(), CoursePlayActivity.class);
+        int Id = mBannerDatas.get(position).getId();
+        String title = mBannerDatas.get(position).getName();
+        intent.putExtra("id",Id);
+        intent.putExtra("title",title);
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
+    }
+
 
 
     @Override
@@ -188,15 +215,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
         }
 
     }
-
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
-
     /**
      *
      * listView点击事件
@@ -207,30 +225,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener , Lis
      */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Intent intent = new Intent(getActivity(), CoursePlayActivity.class);
-            int Id = mCourseDatas.get(i-1).getId();
-            String title = mCourseDatas.get(i-1).getName();
-            intent.putExtra("id",Id);
-            intent.putExtra("title",title);
-            startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
-    }
-
-    /**
-     *
-     * flyBanner点击事件
-     * @param position
-     */
-    @Override
-    public void onItemClick(int position) {
         Intent intent = new Intent(getActivity(), CoursePlayActivity.class);
-        int Id = mBannerDatas.get(position).getId();
-        String title = mBannerDatas.get(position).getName();
+        int Id = mCourseDatas.get(i-1).getId();
+        String title = mCourseDatas.get(i-1).getName();
         intent.putExtra("id",Id);
         intent.putExtra("title",title);
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_none);
     }
+
+
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+
 
 
 }

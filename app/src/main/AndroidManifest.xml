@@ -35,6 +35,8 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity android:name=".acitvities.ClassifyActivity" />
+        <activity android:name=".acitvities.TestAcitvity"/>
+        <activity android:name=".acitvities.LoginActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
